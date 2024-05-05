@@ -1,3 +1,5 @@
+package ScannerExamples;
+
 import java.util.Scanner;
 
 /*

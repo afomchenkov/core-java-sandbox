@@ -1,3 +1,5 @@
+package StringExamples;
+
 public class StringExample {
     public static void main(String args[]) {
         String string = "welcome to java";

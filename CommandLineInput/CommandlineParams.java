@@ -1,3 +1,4 @@
+package CommandLineInput;
 public class CommandlineParams {
     public CommandlineParams() {
         System.out.println("CommandlineParams.CommandlineParams()");

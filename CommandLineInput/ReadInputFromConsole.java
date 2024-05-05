@@ -1,3 +1,4 @@
+package CommandLineInput;
 import java.io.Console;
 
 public class ReadInputFromConsole {
