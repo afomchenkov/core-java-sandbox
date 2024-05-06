@@ -23,9 +23,11 @@ public class FileReadOperation {
             TreeMap<Integer, Employee> treeMap = (TreeMap) objectInputStream.readObject();
             Set<Entry<Integer, Employee>> sEntries = treeMap.entrySet();
             Iterator<Entry<Integer, Employee>> iterator = sEntries.iterator();
+
             while (iterator.hasNext()) {
                 System.out.println(iterator.next());
             }
+
             objectInputStream.close();
             fileInputStream.close();
         } catch (Exception e) {
