@@ -1,4 +1,4 @@
-package InheritanceProject1;
+package Inheritance.InheritanceProject1;
 
 public class BeActive extends Active {
     private int b = 20;

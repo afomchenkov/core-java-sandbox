@@ -1,4 +1,4 @@
-package InheritanceTechnique1;
+package Inheritance.InheritanceTechnique1;
 
 public class NewLogic extends ExistedLogic {
     public NewLogic(int a, int b) {

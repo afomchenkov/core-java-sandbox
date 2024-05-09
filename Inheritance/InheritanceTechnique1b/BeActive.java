@@ -1,4 +1,4 @@
-package InheritanceTechnique1b;
+package Inheritance.InheritanceTechnique1b;
 
 public class BeActive extends Active {
     private int x, y;

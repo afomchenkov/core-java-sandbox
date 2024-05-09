@@ -1,4 +1,4 @@
-package InheritanceProject1;
+package Inheritance.InheritanceProject1;
 
 public class CActive extends BeActive {
     private int c = 30;

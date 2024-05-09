@@ -1,4 +1,4 @@
-package InheritanceTechnique1b;
+package Inheritance.InheritanceTechnique1b;
 
 public class Active {
     private int a, b, c;

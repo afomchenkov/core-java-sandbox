@@ -1,4 +1,4 @@
-package InheritanceTechnique1;
+package Inheritance.InheritanceTechnique1;
 
 public class ExistedLogic {
     private int a = 5;
