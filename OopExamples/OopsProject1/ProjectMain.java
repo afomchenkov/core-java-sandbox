@@ -1,4 +1,4 @@
-package OopsProject1;
+package OopExamples.OopsProject1;
 
 public class ProjectMain {
 

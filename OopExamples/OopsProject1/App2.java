@@ -1,4 +1,4 @@
-package OopsProject1;
+package OopExamples.OopsProject1;
 
 public class App2 {
     public int b = 20;

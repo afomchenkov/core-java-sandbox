@@ -1,4 +1,4 @@
-package OverrideCases.PracticalCase2;
+package OopExamples.OverrideCases.PracticalCase2;
 
 public class DevApp2 extends DevApp1 {
 

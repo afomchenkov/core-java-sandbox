@@ -1,4 +1,4 @@
-package OverrideCases.PracticalCase2;
+package OopExamples.OverrideCases.PracticalCase2;
 
 public class MainApp {
     public MainApp() {

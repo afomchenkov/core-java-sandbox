@@ -1,4 +1,4 @@
-package OopsProject4;
+package OopExamples.OopsProject4;
 
 public class ConstructorsExample {
 

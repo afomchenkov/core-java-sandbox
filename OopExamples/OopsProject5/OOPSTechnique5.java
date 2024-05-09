@@ -1,4 +1,4 @@
-package OopsProject5;
+package OopExamples.OopsProject5;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package OopsProject3;
+package OopExamples.OopsProject3;
 
 public class ParametersActualVsFormal {
 
