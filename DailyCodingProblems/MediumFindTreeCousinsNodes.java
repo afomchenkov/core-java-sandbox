@@ -19,7 +19,8 @@ class TreeNode {
     TreeNode left = null;
     TreeNode right = null;
 
-    TreeNode() {}
+    TreeNode() {
+    }
 
     TreeNode(int val) {
         this.val = val;
@@ -35,7 +36,7 @@ class TreeNode {
 /**
  * Two nodes in a binary tree can be called cousins if they are on the same level of the 
  * tree but have different parents. For example, in the following diagram 4 and 6 are cousins.
- * 
+ *
  *     1
  *    / \
  *   2   3
@@ -43,59 +44,103 @@ class TreeNode {
  * 4   5   6
  * 
  * Given a binary tree and a particular node, find all cousins of that node.
- * 
+ *
  */
 public class MediumFindTreeCousinsNodes {
+    public static void printTree(TreeNode root) {
+        Queue<TreeNode> items = new LinkedList<>();
+        items.add(root);
+        int level = 0;
+
+        while (!items.isEmpty()) {
+            int len = items.size();
+
+            System.out.println(String.format("------ level %d ------", level));
+
+            for (int i = 0; i < len; ++i) {
+                var node = items.remove();
+
+                System.out.println(node.val);
+
+                if (node.left != null) {
+                    items.add(node.left);
+                }
+                if (node.right != null) {
+                    items.add(node.right);
+                }
+            }
+            level += 1;
+        }
+
+        System.out.println(String.format("------- ------ -------", level));
+    }
 
     public static List<TreeNode> getCousins(TreeNode root, TreeNode node) {
-        Queue<TreeNode> queue = new LinkedList<>();
+        Deque<TreeNode> queue = new LinkedList<>();
         queue.add(root);
+        boolean isCousinsLevel = false;
 
         while (!queue.isEmpty()) {
             var childrenLength = queue.size();
-            List<TreeNode> nodesHere = new ArrayList<>();
-            boolean isCousinsLevel = false;
+            if (isCousinsLevel) {
+                break;
+            }
 
             for (int i = 0; i < childrenLength; ++i) {
                 var nodeHere = queue.remove();
-                
+
                 if (nodeHere.left != null) {
                     if (nodeHere.left == node) {
                         isCousinsLevel = true;
+                        queue.add(nodeHere.left);
+                        // skip right sibling
+                        continue;
                     }
                     queue.add(nodeHere.left);
-                    nodesHere.add(nodeHere.left);
                 }
                 if (nodeHere.right != null) {
-                    if (isCousinsLevel) {
-                        // skip current node
-                    }
                     if (nodeHere.right == node) {
-                        // remove previous if not null
-                        // push to result current node
+                        isCousinsLevel = true;
+                        if (nodeHere.left != null) {
+                            // skip left sibling
+                            queue.removeLast();
+                        }
                     }
-                    nodesHere.add(nodeHere.right);
                     queue.add(nodeHere.right);
                 }
-                // add separator between one node siblings
-                // queue.add(null);
             }
         }
 
-        return new LinkedList<TreeNode>();
+        return new LinkedList<>(queue);
     }
-    
-    public static void main(String[] args) {
-        TreeNode node = new TreeNode(3, null, new TreeNode(6));
-        TreeNode root = new TreeNode(
-            1,
-            new TreeNode(2, new TreeNode(4), new TreeNode(5)),
-            node
-        );
 
-        var cousins = getCousins(root, node);
-        for (var nodeHere : cousins) {
-            System.out.println(nodeHere.val);
+    /**
+     * Tree example:
+     *       1
+     *      / \
+     *     2   3
+     *    / \    \
+     *   4   5    6
+     *  / \   \   / \
+     * 9  12   8 7  34
+     */
+    public static void main(String[] args) {
+        TreeNode searchNode1 = new TreeNode(3, null, new TreeNode(6, new TreeNode(7), new TreeNode(34)));
+        TreeNode searchNode3 = new TreeNode(9);
+        TreeNode searchNode4 = new TreeNode(12);
+        TreeNode searchNode2 = new TreeNode(4, searchNode3, searchNode4);
+        TreeNode searchNode5 = new TreeNode(5, null, new TreeNode(8));
+        TreeNode root = new TreeNode(
+                1,
+                new TreeNode(2, searchNode2, searchNode5),
+                searchNode1);
+
+        printTree(root);
+
+        var cousins = getCousins(root, searchNode4);
+
+        for (var n : cousins) {
+            System.out.println(n.val);
         }
     }
 }
