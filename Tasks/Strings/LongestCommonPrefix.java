@@ -1,4 +1,4 @@
-package Tasks;
+package Tasks.Strings;
 
 import java.util.*;
 
@@ -7,7 +7,7 @@ class Trie {
     Map<Character, Trie> letter = new HashMap<>();
 }
 
-public class Strings {
+public class LongestCommonPrefix {
 
     // brute force solution
     static String findLongestCommonPrefix(List<String> items) {
