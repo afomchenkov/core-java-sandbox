@@ -4,7 +4,7 @@ import java.util.*;
 
 class Trie {
     boolean isLeaf = false;
-    Map<Character, Trie> letter = new HashMap<>();
+    Map<Character, Trie> letters = new HashMap<>();
 }
 
 public class LongestCommonPrefix {
@@ -15,6 +15,7 @@ public class LongestCommonPrefix {
         // iterate over the rest of the strings unless A is a prefix
         // slice A by one if not a prefix
         items.sort(Comparator.comparingInt(String::length));
+        // take first shortest string
         String prefix = items.get(0);
 
         for (int i = 1; i < items.size(); ++i) {
@@ -24,6 +25,7 @@ public class LongestCommonPrefix {
                 continue;
             }
 
+            // reduce right, shortest string till it is a prefix of the next string
             while (prefix.length() > 0 && !str.startsWith(prefix)) {
                 prefix = prefix.substring(0, prefix.length() - 1);
             }
@@ -38,10 +40,10 @@ public class LongestCommonPrefix {
 
     static void insertTrie(Trie root, String word) {
         for (var ch : word.toCharArray()) {
-            if (!root.letter.containsKey(ch)) {
-                root.letter.put(ch, new Trie());
+            if (!root.letters.containsKey(ch)) {
+                root.letters.put(ch, new Trie());
             }
-            root = root.letter.get(ch);
+            root = root.letters.get(ch);
         }
 
         // set leaf mark
@@ -54,7 +56,7 @@ public class LongestCommonPrefix {
             System.out.println("----");
         }
 
-        for (var it : root.letter.entrySet()) {
+        for (var it : root.letters.entrySet()) {
             var ch = it.getKey();
             var trie = it.getValue();
             printTrie(trie, word + ch);
@@ -75,9 +77,9 @@ public class LongestCommonPrefix {
         String lcp = "";
         Trie curr = root;
         // if char has more than one child or isLeaf, we should stop
-        // and this will be a longest common prefix
-        while (curr != null && !curr.isLeaf && curr.letter.size() == 1) {
-            var it = curr.letter.entrySet().iterator().next();
+        // and this will be the longest common prefix
+        while (curr != null && !curr.isLeaf && curr.letters.size() == 1) {
+            var it = curr.letters.entrySet().iterator().next();
 
             lcp += it.getKey();
             curr = it.getValue();
