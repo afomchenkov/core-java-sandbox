@@ -84,6 +84,7 @@ class SlidingWindow {
             if (matches(s1arr, s2arr)) {
                 return true;
             }
+            // remove prev, fill next for sliding window
             s2arr[s2.charAt(i + s1.length()) - 'a']++;
             s2arr[s2.charAt(i) - 'a']--;
         }
