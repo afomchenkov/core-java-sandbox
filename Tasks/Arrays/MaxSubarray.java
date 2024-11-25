@@ -1,3 +1,4 @@
+package Tasks.Arrays;
 
 class BruteForce {
 
