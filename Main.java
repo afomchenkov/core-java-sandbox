@@ -26,8 +26,35 @@ public class Main {
             for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
                 if (entry.getValue() > nums.length / 2) return entry.getKey();
             }
-    
+
             return majorityEntry.getKey();
+        }
+    }
+
+    class LongestSubstring {
+        public int run(String s) {
+            int begin = 0;
+            int end = 0;
+
+            HashMap<Character, Boolean> window = new HashMap<>();
+            for (int l = 0, r = 0; r < s.length(); r++) {
+                char ch = s.charAt(r);
+
+                if (window.getOrDefault(ch, false)) {
+                    while (s.charAt(l) != s.charAt(r)) {
+                        window.put(s.charAt(l++), false);
+                    }
+                    l++;
+                } else {
+                    window.put(ch, true);
+                    if (r - l > end - begin) {
+                        begin = l;
+                        end = r;
+                    }
+                }
+            }
+
+            return end - begin + 1;
         }
     }
 
@@ -40,10 +67,10 @@ public class Main {
     
             Deque<String> d = new ArrayDeque();
             StringBuilder word = new StringBuilder();
-            
+
             while (left <= right) {
                 char c = s.charAt(left);
-    
+
                 if ((word.length() != 0) && (c == ' ')) {
                     d.offerFirst(word.toString());
                     word.setLength(0);
@@ -109,6 +136,8 @@ public class Main {
                 new Tuple(5, -4)
         ));
         printSquare(points);
+
+        
 
         System.out.println("---- END ----");
     }
