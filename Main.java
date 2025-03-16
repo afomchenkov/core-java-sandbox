@@ -6,6 +6,58 @@ record Tuple<A, B>(A first, B second) {
 
 public class Main {
 
+    class MajorityElement {
+        private Map<Integer, Integer> countNums(int[] nums) {
+            Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+            for (int num : nums) {
+                if (!counts.containsKey(num)) {
+                    counts.put(num, 1);
+                } else {
+                    counts.put(num, counts.get(num) + 1);
+                }
+            }
+            return counts;
+        }
+    
+        public int majorityElement(int[] nums) {
+            Map<Integer, Integer> counts = countNums(nums);
+    
+            Map.Entry<Integer, Integer> majorityEntry = null;
+            for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+                if (entry.getValue() > nums.length / 2) return entry.getKey();
+            }
+    
+            return majorityEntry.getKey();
+        }
+    }
+
+    class ReverseWords {
+        public String run(String s) {
+            int left = 0, right = s.length() - 1;
+
+            while (left <= right && s.charAt(left) == ' ') ++left;
+            while (left <= right && s.charAt(right) == ' ') --right;
+    
+            Deque<String> d = new ArrayDeque();
+            StringBuilder word = new StringBuilder();
+            
+            while (left <= right) {
+                char c = s.charAt(left);
+    
+                if ((word.length() != 0) && (c == ' ')) {
+                    d.offerFirst(word.toString());
+                    word.setLength(0);
+                } else if (c != ' ') {
+                    word.append(c);
+                }
+                ++left;
+            }
+            d.offerFirst(word.toString());
+    
+            return String.join(" ", d);
+        }
+    }
+
     public static void printSquare(List<Tuple<Integer, Integer>> points) {
         Set<String> pointSet = new HashSet<>();
         for (var p : points) {
