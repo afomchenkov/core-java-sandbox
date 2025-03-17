@@ -3,7 +3,8 @@ package Basics;
 public class Counter {
     private int count;
 
-    public Counter() {}
+    public Counter() {
+    }
 
     public Counter(int initial) {
         count = initial;
