@@ -18,13 +18,14 @@ public class Main {
             }
             return counts;
         }
-    
+
         public int majorityElement(int[] nums) {
             Map<Integer, Integer> counts = countNums(nums);
-    
+
             Map.Entry<Integer, Integer> majorityEntry = null;
             for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
-                if (entry.getValue() > nums.length / 2) return entry.getKey();
+                if (entry.getValue() > nums.length / 2)
+                    return entry.getKey();
             }
 
             return majorityEntry.getKey();
@@ -62,9 +63,11 @@ public class Main {
         public String run(String s) {
             int left = 0, right = s.length() - 1;
 
-            while (left <= right && s.charAt(left) == ' ') ++left;
-            while (left <= right && s.charAt(right) == ' ') --right;
-    
+            while (left <= right && s.charAt(left) == ' ')
+                ++left;
+            while (left <= right && s.charAt(right) == ' ')
+                --right;
+
             Deque<String> d = new ArrayDeque();
             StringBuilder word = new StringBuilder();
 
@@ -80,7 +83,7 @@ public class Main {
                 ++left;
             }
             d.offerFirst(word.toString());
-    
+
             return String.join(" ", d);
         }
     }
@@ -101,7 +104,8 @@ public class Main {
                 int x2 = points.get(j).first(), y2 = points.get(j).second();
 
                 // Skip if they form a horizontal or vertical line (they must be diagonal)
-                if (x1 == x2 || y1 == y2) continue;
+                if (x1 == x2 || y1 == y2)
+                    continue;
 
                 // Check if the other two corners exist
                 if (pointSet.contains(x1 + "," + y2) && pointSet.contains(x2 + "," + y1)) {
@@ -110,9 +114,8 @@ public class Main {
                     if (area > maxArea) {
                         maxArea = area;
                         bestRectangle = List.of(
-                            new int[]{x1, y1}, new int[]{x1, y2},
-                            new int[]{x2, y1}, new int[]{x2, y2}
-                        );
+                                new int[] { x1, y1 }, new int[] { x1, y2 },
+                                new int[] { x2, y1 }, new int[] { x2, y2 });
                     }
                 }
             }
@@ -133,11 +136,8 @@ public class Main {
                 new Tuple(-3, -1),
                 new Tuple(-3, -4),
                 new Tuple(5, -3),
-                new Tuple(5, -4)
-        ));
+                new Tuple(5, -4)));
         printSquare(points);
-
-        
 
         System.out.println("---- END ----");
     }
