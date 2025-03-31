@@ -45,48 +45,56 @@ public class WordSearchWildCard {
         node.isWord = true;
     }
 
-    private boolean _search(String word, List<WordSearchWildCard> _children) {
-        WordSearchWildCard lastNode = new WordSearchWildCard();
+    private boolean _search(String word, int idx, List<WordSearchWildCard> _children) {
+        var ch = word.charAt(idx);
+        var charIndex = findChildChar(ch, _children);
 
-        for (int i = 0; i < word.length(); i++) {
-            var ch = word.charAt(i);
-            if (ch == '.') {
-                for (var node : _children) {
-                    String sub = word.substring(i);
-                    if (sub.length() == 1 && sub.charAt(0) =='.') {
+        if (ch == '.') {
+            for (var node : _children) {
+                if (idx + 1 >= word.length()) {
+                    if (node.isWord) {
                         return true;
                     }
-                    if (_search(sub, node.children)) {
-                        return true;
-                    }
+                    continue;
                 }
-            } else {
-                int idx = findChildChar(ch, _children);
-
-                if (idx == -1) {
-                    return false;
+                if (_search(word, idx + 1, node.children)) {
+                    return true;
                 }
-                
-                lastNode = _children.get(idx);
-                _children = lastNode.children;
+            }
+        } else {
+            if (charIndex >= 0) {
+                var nextNode = _children.get(charIndex);
+                if (idx + 1 < word.length()) {
+                    return _search(word, idx + 1, nextNode.children);   
+                }
+                return nextNode.isWord;
             }
         }
 
-        return lastNode.isWord;
+        return false;
     }
     
     public boolean search(String word) {
-        return _search(word, children);
+        return _search(word, 0, children);
     }
 
     public static void main(String[] args) {
         WordSearchWildCard wordDictionary = new WordSearchWildCard();
-        wordDictionary.addWord("bad");
-        wordDictionary.addWord("dad");
-        wordDictionary.addWord("mad");
+        // wordDictionary.addWord("bad");
+        // wordDictionary.addWord("dad");
+        // wordDictionary.addWord("mad");
+        // wordDictionary.addWord("a");
         // System.out.println(wordDictionary.search("pad")); // return False
         // System.out.println(wordDictionary.search("bad")); // return True
         // System.out.println(wordDictionary.search(".ad")); // return True
-        System.out.println(wordDictionary.search("b..")); // return True
+        // System.out.println(wordDictionary.search("b..")); // return True
+        // System.out.println(wordDictionary.search(".a")); // return False
+        wordDictionary.addWord("at");
+        wordDictionary.addWord("and");
+        wordDictionary.addWord("an");
+        wordDictionary.addWord("add");
+        
+        System.out.println(wordDictionary.search("b."));
+        System.out.println(wordDictionary.search("."));
     }
 }
