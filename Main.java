@@ -5,6 +5,178 @@ record Tuple<A, B>(A first, B second) {
 }
 
 public class Main {
+    class InsertNewInterval {
+        public int[][] insertIterate(int[][] intervals, int[] newInterval) {
+            int n = intervals.length, i = 0;
+            List<int[]> res = new ArrayList<>();
+
+            // Case 1: No overlapping before merging intervals
+            while (i < n && intervals[i][1] < newInterval[0]) {
+                res.add(intervals[i]);
+                i++;
+            }
+
+            // Case 2: Overlapping and merging intervals
+            while (i < n && newInterval[1] >= intervals[i][0]) {
+                newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
+                newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
+                i++;
+            }
+            res.add(newInterval);
+
+            // Case 3: No overlapping after merging newInterval
+            while (i < n) {
+                res.add(intervals[i]);
+                i++;
+            }
+
+            // Convert List to array
+            return res.toArray(new int[res.size()][]);
+        }
+
+        public int[][] insertBinarySearch(int[][] intervals, int[] newInterval) {
+            // If the intervals vector is empty, return a vector containing the newInterval
+            if (intervals.length == 0) {
+                return new int[][] { newInterval };
+            }
+
+            int n = intervals.length;
+            int target = newInterval[0];
+            int left = 0, right = n - 1;
+
+            // Binary search to find the position to insert newInterval
+            while (left <= right) {
+                int mid = (left + right) / 2;
+                if (intervals[mid][0] < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+
+            // Insert newInterval at the found position
+            List<int[]> result = new ArrayList<>();
+            for (int i = 0; i < left; i++) {
+                result.add(intervals[i]);
+            }
+            result.add(newInterval);
+            for (int i = left; i < n; i++) {
+                result.add(intervals[i]);
+            }
+
+            // Merge overlapping intervals
+            List<int[]> merged = new ArrayList<>();
+            for (int[] interval : result) {
+                // If res is empty or there is no overlap, add the interval to the result
+                if (merged.isEmpty() ||
+                        merged.get(merged.size() - 1)[1] < interval[0]) {
+                    merged.add(interval);
+                    // If there is an overlap, merge the intervals by updating the end of the last
+                    // interval in res
+                } else {
+                    merged.get(merged.size() - 1)[1] = Math.max(
+                            merged.get(merged.size() - 1)[1],
+                            interval[1]);
+                }
+            }
+
+            return merged.toArray(new int[0][]);
+        }
+    }
+
+    class MergeIntervalsGraph {
+        private Map<int[], List<int[]>> graph;
+        private Map<Integer, List<int[]>> nodesInComp;
+        private Set<int[]> visited;
+
+        // return whether two intervals overlap (inclusive)
+        private boolean overlap(int[] a, int[] b) {
+            return a[0] <= b[1] && b[0] <= a[1];
+        }
+
+        // build a graph where an undirected edge between intervals u and v exists
+        // iff u and v overlap.
+        private void buildGraph(int[][] intervals) {
+            graph = new HashMap<>();
+            for (int[] interval : intervals) {
+                graph.put(interval, new LinkedList<>());
+            }
+
+            for (int[] interval1 : intervals) {
+                for (int[] interval2 : intervals) {
+                    if (overlap(interval1, interval2)) {
+                        graph.get(interval1).add(interval2);
+                        graph.get(interval2).add(interval1);
+                    }
+                }
+            }
+        }
+
+        // merges all of the nodes in this connected component into one interval.
+        private int[] mergeNodes(List<int[]> nodes) {
+            int minStart = nodes.get(0)[0];
+            for (int[] node : nodes) {
+                minStart = Math.min(minStart, node[0]);
+            }
+
+            int maxEnd = nodes.get(0)[1];
+            for (int[] node : nodes) {
+                maxEnd = Math.max(maxEnd, node[1]);
+            }
+
+            return new int[] { minStart, maxEnd };
+        }
+
+        // use depth-first search to mark all nodes in the same connected component
+        // with the same integer.
+        private void markComponentDFS(int[] start, int compNumber) {
+            Stack<int[]> stack = new Stack<>();
+            stack.add(start);
+
+            while (!stack.isEmpty()) {
+                int[] node = stack.pop();
+                if (!visited.contains(node)) {
+                    visited.add(node);
+
+                    if (nodesInComp.get(compNumber) == null) {
+                        nodesInComp.put(compNumber, new LinkedList<>());
+                    }
+                    nodesInComp.get(compNumber).add(node);
+
+                    for (int[] child : graph.get(node)) {
+                        stack.add(child);
+                    }
+                }
+            }
+        }
+
+        // gets the connected components of the interval overlap graph.
+        private void buildComponents(int[][] intervals) {
+            nodesInComp = new HashMap<>();
+            visited = new HashSet<>();
+            int compNumber = 0;
+
+            for (int[] interval : intervals) {
+                if (!visited.contains(interval)) {
+                    markComponentDFS(interval, compNumber);
+                    compNumber++;
+                }
+            }
+        }
+
+        public int[][] merge(int[][] intervals) {
+            buildGraph(intervals);
+            buildComponents(intervals);
+
+            // for each component, merge all intervals into one interval.
+            List<int[]> merged = new LinkedList<>();
+            for (int comp = 0; comp < nodesInComp.size(); comp++) {
+                merged.add(mergeNodes(nodesInComp.get(comp)));
+            }
+
+            return merged.toArray(new int[merged.size()][]);
+        }
+    }
 
     class MajorityElement {
         private Map<Integer, Integer> countNums(int[] nums) {
@@ -18,13 +190,14 @@ public class Main {
             }
             return counts;
         }
-    
+
         public int majorityElement(int[] nums) {
             Map<Integer, Integer> counts = countNums(nums);
-    
+
             Map.Entry<Integer, Integer> majorityEntry = null;
             for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
-                if (entry.getValue() > nums.length / 2) return entry.getKey();
+                if (entry.getValue() > nums.length / 2)
+                    return entry.getKey();
             }
 
             return majorityEntry.getKey();
@@ -62,9 +235,11 @@ public class Main {
         public String run(String s) {
             int left = 0, right = s.length() - 1;
 
-            while (left <= right && s.charAt(left) == ' ') ++left;
-            while (left <= right && s.charAt(right) == ' ') --right;
-    
+            while (left <= right && s.charAt(left) == ' ')
+                ++left;
+            while (left <= right && s.charAt(right) == ' ')
+                --right;
+
             Deque<String> d = new ArrayDeque();
             StringBuilder word = new StringBuilder();
 
@@ -80,7 +255,7 @@ public class Main {
                 ++left;
             }
             d.offerFirst(word.toString());
-    
+
             return String.join(" ", d);
         }
     }
@@ -101,7 +276,8 @@ public class Main {
                 int x2 = points.get(j).first(), y2 = points.get(j).second();
 
                 // Skip if they form a horizontal or vertical line (they must be diagonal)
-                if (x1 == x2 || y1 == y2) continue;
+                if (x1 == x2 || y1 == y2)
+                    continue;
 
                 // Check if the other two corners exist
                 if (pointSet.contains(x1 + "," + y2) && pointSet.contains(x2 + "," + y1)) {
@@ -110,9 +286,8 @@ public class Main {
                     if (area > maxArea) {
                         maxArea = area;
                         bestRectangle = List.of(
-                            new int[]{x1, y1}, new int[]{x1, y2},
-                            new int[]{x2, y1}, new int[]{x2, y2}
-                        );
+                                new int[] { x1, y1 }, new int[] { x1, y2 },
+                                new int[] { x2, y1 }, new int[] { x2, y2 });
                     }
                 }
             }
@@ -133,11 +308,8 @@ public class Main {
                 new Tuple(-3, -1),
                 new Tuple(-3, -4),
                 new Tuple(5, -3),
-                new Tuple(5, -4)
-        ));
+                new Tuple(5, -4)));
         printSquare(points);
-
-        
 
         System.out.println("---- END ----");
     }
